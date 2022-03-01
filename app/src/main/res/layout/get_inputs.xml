@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/sale_image">
+
+
+    <TextView
+        android:id="@+id/disp_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="-9dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="4dp"
+        android:fontFamily="casual"
+        android:gravity="center_horizontal"
+        android:lineSpacingExtra="4sp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="#E90C6712"
+        android:textSize="20pt"
+        android:textStyle="bold|italic"
+        android:typeface="serif"></TextView>
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/get_val"
+        android:layout_width="256dp"
+        android:layout_height="73dp"
+        android:layout_alignBottom="@+id/unit_disp"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="140dp"
+        android:layout_marginBottom="-29dp"
+        android:inputType="number|numberDecimal"
+        android:textSize="15pt" />
+
+    <Button
+        android:id="@+id/nextbtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="18dp"
+        android:enabled="false"
+        android:hapticFeedbackEnabled="true"
+        android:text="Next"
+        android:textSize="20pt" />
+
+    <TextView
+        android:id="@+id/unit_disp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="58dp"
+        android:layout_marginBottom="162dp"
+        android:textSize="15pt" />
+
+
+</RelativeLayout>
