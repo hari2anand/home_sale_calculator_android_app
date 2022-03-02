@@ -3,20 +3,22 @@ package com.example.homesalecalculator
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.widget.Button
-import android.widget.TextView
-import android.widget.Toast
+import android.view.View
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import java.lang.Float.parseFloat
 import java.util.*
 
+
 class getInputs : AppCompatActivity() {
+
     var paidAmnt: String = ""
     var soldAmnt: String = ""
     var bPercent: String = ""
     var taxPercent: String = ""
     var bankMrtg: String = ""
     var misc: String = ""
+    var brokerComissionType: String = "PERCENTAGE"
 
     companion object {
         const val DISPLAY_MESSAGE = "DISPLAY_MESSAGE" // What is the sale price?
@@ -49,6 +51,8 @@ class getInputs : AppCompatActivity() {
         if (nxtinputCategory != "FINAL_PAGE") {
 
             val button = findViewById<Button>(R.id.nextbtn)
+
+            if (nxtinputCategory == "BROKERAGE_SELECTION") button.setEnabled(true)
 
             val textWatcher = object : TextWatcher {
                 override fun afterTextChanged(s: Editable?) {
@@ -90,8 +94,20 @@ class getInputs : AppCompatActivity() {
                     }
                     "SALE_PRICE" -> {
                         soldAmnt = inputVal.toString()
-                        inputUnit = "%"
-                        display_msg = "What is the Broker Commission (in %)?"
+                        display_msg =
+                            "What's your agreement with the Real Estate Agent"
+                        nextInputCategory = "BROKERAGE_SELECTION"
+
+                    }
+                    "BROKERAGE_SELECTION" -> {
+                        brokerComissionType = inputVal.toString()
+                        if (brokerComissionType == "PERCENTAGE") {
+                            display_msg = "What is the Broker Commission? (till ex., 2.8 %)"
+                            inputUnit = "%"
+                        } else {
+                            inputUnit = "SEK"
+                            display_msg = "What is the Broker Commission? (till ex., SEK 44000)"
+                        }
                         nextInputCategory = "BROKERAGE"
 
                     }
@@ -99,7 +115,7 @@ class getInputs : AppCompatActivity() {
                         bPercent = inputVal.toString()
                         inputUnit = "%"
                         display_msg =
-                            "What is the local Sales Tax (in %) (on Profit excl Brokerage)?"
+                            "What is the local Sales Tax (in %) (till ex., 22% on Profit excl Brokerage)?"
                         nextInputCategory = "SALE_TAX"
 
                     }
@@ -138,12 +154,61 @@ class getInputs : AppCompatActivity() {
 
                 disp_msg.text = display_msg
                 unit_disp.text = inputUnit
+                if (nxtinputCategory == "SALE_PRICE") {
+                    get_val.isEnabled = false
+                    //write logic for radio button
+                    get_val.text = "FIXED_TO_CHANGE" //TODO: based on Radio Selection
+
+                    val rprms: RadioGroup.LayoutParams
+                    val rgp= RadioGroup(this)
+                    val radioButton1 = RadioButton(this)
+                    radioButton1.text = "Fixed Commission \n OR"
+                    radioButton1.id = View.generateViewId()
+                    rprms = RadioGroup.LayoutParams(
+                        RadioGroup.LayoutParams.WRAP_CONTENT,
+                        RadioGroup.LayoutParams.WRAP_CONTENT
+                    )
+
+                    rgp.addView(radioButton1, rprms)
+
+
+
+
+                   /* val radioButton1 = RadioButton(this)
+                    radioButton1.layoutParams = LinearLayout.LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                    )
+                    radioButton1.setText()
+                    //radioButton1.id = R.id.radioButton_ID_1
+
+                    val radioButton2 = RadioButton(this)
+                    radioButton2.layoutParams = LinearLayout.LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                    )
+                    radioButton2.setText("Percentage on Sale Value")
+
+
+                    val radioGroup = RadioGroup(this)
+                    radioGroup.addView(radioButton1)
+                    radioGroup.addView(radioButton2)
+                    radioGroup.setOnCheckedChangeListener { group, checkedId ->
+                        // var text =  getString(if (checkedId == 0)  "Fixed Commission \n OR" else "Percentage on Sale Value")
+                        Toast.makeText(applicationContext, "PERCEM", Toast.LENGTH_SHORT).show()
+                    }
+                    */
+
+                }
                 buttonClicker(nextInputCategory, get_val)
                 //finish()
             }
         } else {
 
-            var brokerage: Float = (parseFloat(bPercent) * parseFloat(soldAmnt)) / 100
+            var brokerage: Float =
+                if (brokerComissionType == "PERCENTAGE") (parseFloat(bPercent) * parseFloat(soldAmnt)) / 100 else parseFloat(
+                    bPercent
+                )
 
             var taxAmount: Float = if (parseFloat(soldAmnt) > parseFloat(paidAmnt))
                 ((parseFloat(soldAmnt) - parseFloat((paidAmnt)) - brokerage) * parseFloat(taxPercent) / 100)
@@ -159,7 +224,7 @@ class getInputs : AppCompatActivity() {
 
             setContentView(R.layout.show_result)
 
-            val display_msg:String = "You Bought your house for SEK ${paidAmnt} \n" +
+            val display_msg: String = "You Bought your house for SEK ${paidAmnt} \n" +
                     "and If you sell your house for SEK ${soldAmnt} with a brokerage percentage of ${bPercent} and with the House Sale Tax of ${taxPercent}% on the profit\n" +
                     "then, \n You need to pay SEK ${brokerage} as the broker commission and SEK ${taxAmount} to the Skatteverket \n" +
                     "with that, after deducting your Mortgage SEK ${bankMrtg} and miscellaneous expenditure (Hemnet/Advert Fee) SEK ${misc}, you will end up with SEK ${moneyFromHome} from your home"

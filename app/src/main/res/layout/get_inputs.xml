@@ -20,7 +20,7 @@
         android:gravity="center_horizontal"
         android:lineSpacingExtra="4sp"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="#E90C6712"
+        android:textColor="#F44336"
         android:textSize="20pt"
         android:textStyle="bold|italic"
         android:typeface="serif"></TextView>
@@ -31,8 +31,8 @@
         android:layout_height="73dp"
         android:layout_alignBottom="@+id/unit_disp"
         android:layout_alignParentStart="true"
-        android:layout_marginStart="140dp"
-        android:layout_marginBottom="-29dp"
+        android:layout_marginStart="129dp"
+        android:layout_marginBottom="-5dp"
         android:inputType="number|numberDecimal"
         android:textSize="15pt" />
 
@@ -56,7 +56,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
         android:layout_marginStart="58dp"
-        android:layout_marginBottom="162dp"
+        android:layout_marginBottom="105dp"
         android:textSize="15pt" />
 
 
