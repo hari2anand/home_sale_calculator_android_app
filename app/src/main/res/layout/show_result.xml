@@ -22,6 +22,7 @@
         android:shadowColor="#E66363"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="#023C3A"
+        android:textIsSelectable="true"
         android:textSize="9pt"
         android:textStyle="bold|italic"
         android:typeface="serif"></TextView>

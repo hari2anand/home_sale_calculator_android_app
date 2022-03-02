@@ -1,13 +1,16 @@
 package com.example.homesalecalculator
 
+import android.content.res.ColorStateList
+import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.TypedValue
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import java.lang.Float.parseFloat
-import java.util.*
 
 
 class getInputs : AppCompatActivity() {
@@ -100,7 +103,7 @@ class getInputs : AppCompatActivity() {
 
                     }
                     "BROKERAGE_SELECTION" -> {
-                        brokerComissionType = inputVal.toString()
+                        //  brokerComissionType = inputVal.toString()
                         if (brokerComissionType == "PERCENTAGE") {
                             display_msg = "What is the Broker Commission? (till ex., 2.8 %)"
                             inputUnit = "%"
@@ -155,53 +158,50 @@ class getInputs : AppCompatActivity() {
                 disp_msg.text = display_msg
                 unit_disp.text = inputUnit
                 if (nxtinputCategory == "SALE_PRICE") {
+                    get_val.setVisibility(View.GONE)
                     get_val.isEnabled = false
-                    //write logic for radio button
-                    get_val.text = "FIXED_TO_CHANGE" //TODO: based on Radio Selection
 
-                    val rprms: RadioGroup.LayoutParams
-                    val rgp= RadioGroup(this)
-                    val radioButton1 = RadioButton(this)
-                    radioButton1.text = "Fixed Commission \n OR"
-                    radioButton1.id = View.generateViewId()
-                    rprms = RadioGroup.LayoutParams(
-                        RadioGroup.LayoutParams.WRAP_CONTENT,
-                        RadioGroup.LayoutParams.WRAP_CONTENT
+                    val rgp = findViewById<View>(R.id.radio_group) as RadioGroup
+
+                    val colorStateList = ColorStateList(
+                        arrayOf(
+                            intArrayOf(-android.R.attr.state_checked),
+                            intArrayOf(android.R.attr.state_checked)
+                        ), intArrayOf(
+                            Color.DKGRAY, Color.rgb(242, 81, 112)
+                        )
                     )
 
-                    rgp.addView(radioButton1, rprms)
 
+                    val rbn1 = RadioButton(this)
+                    val rbn2 = RadioButton(this)
+                    rbn1.buttonTintList= colorStateList
+                    rbn2.buttonTintList= colorStateList
+                    rbn1.id = View.generateViewId()
+                    rbn1.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 25.5F)
+                    rbn1.setTextColor(Color.parseColor("#000000"))
+                    rbn1.setTypeface(null, Typeface.BOLD)
+                    rbn1.setTypeface(null, Typeface.BOLD)
+                    rbn1.text = "Fixed Commission \n \n OR"
+                    rbn2.id = View.generateViewId()
+                    rbn2.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 25.5F)
+                    rbn2.setTextColor(Color.parseColor("#000000"))
+                    rbn2.setTypeface(null, Typeface.BOLD)
+                    rbn2.setTypeface(null, Typeface.BOLD)
+                    rbn2.text = "\nPercentage on Sale Value"
+                    rgp.addView(rbn1)
+                    rgp.addView(rbn2)
 
-
-
-                   /* val radioButton1 = RadioButton(this)
-                    radioButton1.layoutParams = LinearLayout.LayoutParams(
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT
-                    )
-                    radioButton1.setText()
-                    //radioButton1.id = R.id.radioButton_ID_1
-
-                    val radioButton2 = RadioButton(this)
-                    radioButton2.layoutParams = LinearLayout.LayoutParams(
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT
-                    )
-                    radioButton2.setText("Percentage on Sale Value")
-
-
-                    val radioGroup = RadioGroup(this)
-                    radioGroup.addView(radioButton1)
-                    radioGroup.addView(radioButton2)
-                    radioGroup.setOnCheckedChangeListener { group, checkedId ->
-                        // var text =  getString(if (checkedId == 0)  "Fixed Commission \n OR" else "Percentage on Sale Value")
-                        Toast.makeText(applicationContext, "PERCEM", Toast.LENGTH_SHORT).show()
+                    rgp.setOnCheckedChangeListener { group, checkedId ->
+                        var text = if (checkedId == 1) "FIXED_COMISSION" else "PERCENTAGE"
+                        //get_val.text = text
+                        brokerComissionType = text
+                        Toast.makeText(applicationContext, text, Toast.LENGTH_SHORT).show()
                     }
-                    */
 
                 }
                 buttonClicker(nextInputCategory, get_val)
-                //finish()
+
             }
         } else {
 
@@ -227,10 +227,11 @@ class getInputs : AppCompatActivity() {
             val display_msg: String = "You Bought your house for SEK ${paidAmnt} \n" +
                     "and If you sell your house for SEK ${soldAmnt} with a brokerage percentage of ${bPercent} and with the House Sale Tax of ${taxPercent}% on the profit\n" +
                     "then, \n You need to pay SEK ${brokerage} as the broker commission and SEK ${taxAmount} to the Skatteverket \n" +
-                    "with that, after deducting your Mortgage SEK ${bankMrtg} and miscellaneous expenditure (Hemnet/Advert Fee) SEK ${misc}, you will end up with SEK ${moneyFromHome} from your home"
+                    "with that, after deducting your Mortgage SEK ${bankMrtg} and miscellaneous expenditure (Hemnet/Advert Fee) SEK ${misc}, you will end up with SEK ${moneyFromHome} from your home \n  "
 
             val disp_msg = findViewById<TextView>(R.id.disp_msg)
-
+            disp_msg.setTypeface(null, Typeface.BOLD)
+            disp_msg.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18.5F)
             disp_msg.text = display_msg
 
 
