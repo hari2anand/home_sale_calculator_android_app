@@ -1,5 +1,7 @@
 package com.example.homesalecalculator
 
+import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.Typeface
@@ -7,10 +9,15 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.TypedValue
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import java.lang.Float.parseFloat
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 
 class getInputs : AppCompatActivity() {
@@ -45,6 +52,7 @@ class getInputs : AppCompatActivity() {
         buttonClicker("PURCHASE_PRICE", get_val)
     }
 
+    @SuppressLint("WrongViewCast")
     fun buttonClicker(nxtinputCategory: String, inputObject: TextView) {
         val inputVal = inputObject.text
         var display_msg: String = ""
@@ -175,8 +183,8 @@ class getInputs : AppCompatActivity() {
 
                     val rbn1 = RadioButton(this)
                     val rbn2 = RadioButton(this)
-                    rbn1.buttonTintList= colorStateList
-                    rbn2.buttonTintList= colorStateList
+                    rbn1.buttonTintList = colorStateList
+                    rbn2.buttonTintList = colorStateList
                     rbn1.id = View.generateViewId()
                     rbn1.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 25.5F)
                     rbn1.setTextColor(Color.parseColor("#000000"))
@@ -234,7 +242,71 @@ class getInputs : AppCompatActivity() {
             disp_msg.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18.5F)
             disp_msg.text = display_msg
 
+            val saveButton = findViewById<ImageButton>(R.id.saveButton)
+
+
+            saveButton.setOnClickListener {
+
+                val alertDialogBuilder: AlertDialog.Builder = AlertDialog.Builder(this)
+                val layoutInflater = LayoutInflater.from(this)
+                var popupInputDialogView: View = layoutInflater.inflate(R.layout.save_dialog, null)
+                alertDialogBuilder.setTitle("Save your Result ? ");
+                alertDialogBuilder.setIcon(android.R.drawable.ic_menu_save);
+                alertDialogBuilder.setCancelable(true);
+                val saveTextName =
+                    popupInputDialogView.findViewById<TextView>(R.id.saveKey) as EditText
+                alertDialogBuilder.setView(popupInputDialogView);
+                val alertDialog: AlertDialog = alertDialogBuilder.create();
+                alertDialog.show();
+                val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+                saveTextName.setText("calculation_on_sale_sek_${soldAmnt}_" + timeStamp)
+                val saveDataBtn = popupInputDialogView.findViewById<Button>(R.id.save_btn)
+                val cancelDialogButton = popupInputDialogView.findViewById<Button>(R.id.cancel_btn)
+                saveDataBtn.setOnClickListener(View.OnClickListener {
+                    val saveKeyField = popupInputDialogView.findViewById<TextView>(R.id.saveKey)
+                    val saveKey: String = saveKeyField.getText().toString()
+
+                    val saveKeyNameArray = arrayOf("Save Key", "Calculation Info")
+                    val dataArr = arrayOf(saveKey, display_msg)
+
+                    //TODO: Fetch array from pref (if not create one)
+                    //TODO: check for the size and Delete/Remove the first item in array if exceeds size 14
+                    //TODO: Add new key to the array
+                    //TODO: Fetch map(key value pair) from pref
+                    //TODO: Delete key/value pair (if exceeds 15) shifted key
+                    //TODO: Add new key value pai
+                    //TODO: OnloadData find the name and fetch it
+                    val itemDataList = ArrayList<Map<String, Any?>>()
+                    val saveKeyLen = saveKeyNameArray.size
+                    for (i in 0 until saveKeyLen) {
+                        val listItemMap: MutableMap<String, Any?> = HashMap()
+                        listItemMap["title"] = saveKeyNameArray[i]
+                        listItemMap["data"] = dataArr[i]
+                        itemDataList.add(listItemMap)
+                    }
+                    //TODO: Save the array back to Preference
+                    alertDialog.cancel()
+                })
+                cancelDialogButton.setOnClickListener(View.OnClickListener { alertDialog.cancel() })
+            }
 
         }
+
     }
+
+    fun saveCalculation() {
+
+    }
+
+    fun remove(arr: IntArray, index: Int): IntArray {
+        if (index < 0 || index >= arr.size) {
+            return arr
+        }
+
+        val result = arr.toMutableList()
+        result.removeAt(index)
+        return result.toIntArray()
+    }
+
 }
+
