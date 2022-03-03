@@ -2,11 +2,13 @@ package com.example.homesalecalculator
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import android.text.Editable
+import android.text.TextUtils
 import android.text.TextWatcher
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -250,7 +252,7 @@ class getInputs : AppCompatActivity() {
                 val alertDialogBuilder: AlertDialog.Builder = AlertDialog.Builder(this)
                 val layoutInflater = LayoutInflater.from(this)
                 var popupInputDialogView: View = layoutInflater.inflate(R.layout.save_dialog, null)
-                alertDialogBuilder.setTitle("Save your Result ? ");
+                alertDialogBuilder.setTitle("Do you want to Save this Report ? ");
                 alertDialogBuilder.setIcon(android.R.drawable.ic_menu_save);
                 alertDialogBuilder.setCancelable(true);
                 val saveTextName =
@@ -276,18 +278,48 @@ class getInputs : AppCompatActivity() {
                     //TODO: Delete key/value pair (if exceeds 15) shifted key
                     //TODO: Add new key value pai
                     //TODO: OnloadData find the name and fetch it
-                    val itemDataList = ArrayList<Map<String, Any?>>()
-                    val saveKeyLen = saveKeyNameArray.size
-                    for (i in 0 until saveKeyLen) {
+                    val sharedPref = this.getSharedPreferences(
+                        "savedReport",
+                        Context.MODE_PRIVATE
+                    ) //?: return ArrayList<Map<String, Any?>>()
+
+                    //val itemDataList = ArrayList<Map<String, Any?>>()
+                    val serialized = sharedPref.getString("ReportMap", "Save Key")
+                    Toast.makeText(this, serialized, Toast.LENGTH_LONG).show();
+                    val itemDataList: MutableList<Array<String>> =
+                        (mutableListOf(TextUtils.split(serialized, ",")))
+                    itemDataList.add(dataArr)
+                    //val saveKeyLen = saveKeyNameArray.size
+                   /* for (i in 0 until saveKeyLen) {
                         val listItemMap: MutableMap<String, Any?> = HashMap()
                         listItemMap["title"] = saveKeyNameArray[i]
                         listItemMap["data"] = dataArr[i]
                         itemDataList.add(listItemMap)
-                    }
+                    }*/
                     //TODO: Save the array back to Preference
+
+
+                    with(sharedPref.edit()) {
+                        putString("ReportMap", TextUtils.join(",", itemDataList));
+                        commit()
+                    }
+
+                    val checkitemDataList = sharedPref.getString("ReportMap", "Save Key")
+
+                    Toast.makeText(this, checkitemDataList, Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, serialized, Toast.LENGTH_LONG).show()
+
+                    /*val sharedPref = this?.getSharedPreferences("savedReport", Context.MODE_PRIVATE)
+                    with (sharedPref.edit()) {
+                        putStringArrayList("test", values)(itemDataList.toString(), "savedReport")
+                        apply()
+                    }*/
+
                     alertDialog.cancel()
                 })
-                cancelDialogButton.setOnClickListener(View.OnClickListener { alertDialog.cancel() })
+                cancelDialogButton.setOnClickListener(View.OnClickListener {
+                    alertDialog.cancel()
+                })
             }
 
         }
