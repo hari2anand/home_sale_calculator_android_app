@@ -3,6 +3,7 @@ package com.example.homesalecalculator
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.Typeface
@@ -15,6 +16,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import org.json.JSONException
 import org.json.JSONObject
 import java.lang.Float.parseFloat
@@ -30,11 +32,10 @@ class GetInputs : AppCompatActivity() {
     var bankMrtg: String = ""
     var misc: String = ""
     var brokerComissionType: String = "PERCENTAGE"
-    val intSaveSize: Int = 2
 
     companion object {
-        const val DISPLAY_MESSAGE = "DISPLAY_MESSAGE" // What is the sale price?
-        const val INPUT_UNIT = "INPUT_UNIT" // eg., SEK or %
+        const val DISPLAY_MESSAGE = "What is the sale price?"
+        const val INPUT_UNIT = "SEK"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,7 +55,6 @@ class GetInputs : AppCompatActivity() {
         buttonClicker("PURCHASE_PRICE", getVal)
     }
 
-    @SuppressLint("WrongViewCast")
     fun buttonClicker(nxtinputCategory: String, inputObject: TextView) {
         val inputVal = inputObject.text
         var displayMsg = ""
@@ -237,105 +237,12 @@ class GetInputs : AppCompatActivity() {
                     "then, \n You need to pay SEK ${brokerage} as the broker commission and SEK ${taxAmount} to the Skatteverket \n" +
                     "with that, after deducting your Mortgage SEK ${bankMrtg} and miscellaneous expenditure (Hemnet/Advert Fee) SEK ${misc}, you will end up with SEK ${moneyFromHome} from your home \n  "
 
-            setContentView(R.layout.show_result)
+            val showReportIntent = Intent(this, ShowResult::class.java)
+            showReportIntent.putExtra(ShowResult.SALE_REPORT_MESSAGE, displayMsg)
+            showReportIntent.putExtra(ShowResult.IS_LOAD,"false")
+            showReportIntent.putExtra(ShowResult.SALE_AMOUNT, soldAmnt)
+            startActivity(showReportIntent)
 
-
-            val dispMsg = findViewById<TextView>(R.id.disp_msg)
-            dispMsg.setTypeface(null, Typeface.BOLD)
-            dispMsg.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18.5F)
-            dispMsg.text = displayMsg
-
-            val saveButton = findViewById<ImageButton>(R.id.saveButton)
-
-            saveButton.setOnClickListener {
-
-                val alertDialogBuilder: AlertDialog.Builder = AlertDialog.Builder(this)
-                val layoutInflater = LayoutInflater.from(this)
-                var popupInputDialogView: View = layoutInflater.inflate(R.layout.save_dialog, null)
-                alertDialogBuilder.setTitle("Do you want to Save this Report ? ");
-                alertDialogBuilder.setIcon(android.R.drawable.ic_menu_save);
-                alertDialogBuilder.setCancelable(true);
-                val saveTextName =
-                    popupInputDialogView.findViewById<TextView>(R.id.saveKey) as EditText
-                alertDialogBuilder.setView(popupInputDialogView);
-                val alertDialog: AlertDialog = alertDialogBuilder.create();
-                alertDialog.show();
-                val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-                saveTextName.setText("calculation_on_sale_sek_${soldAmnt}_" + timeStamp)
-                val saveDataBtn = popupInputDialogView.findViewById<Button>(R.id.save_btn)
-                val cancelDialogButton = popupInputDialogView.findViewById<Button>(R.id.cancel_btn)
-
-                saveDataBtn.setOnClickListener(View.OnClickListener {
-                    val saveKeyField = popupInputDialogView.findViewById<TextView>(R.id.saveKey)
-                    val saveKeyValue: String = saveKeyField.text.toString()
-
-                    val sharedPref = this.getSharedPreferences(
-                        "savedReport",
-                        Context.MODE_PRIVATE
-                    )
-
-                    var jsonSaleReportsPrefString = sharedPref.getString("ReportJSON", "")
-                    var keyListsPrefString = sharedPref.getString("keyLists", "")
-
-                    Toast.makeText(this, jsonSaleReportsPrefString, Toast.LENGTH_LONG).show();
-
-                    Toast.makeText(this, keyListsPrefString, Toast.LENGTH_LONG).show();
-
-                    if (jsonSaleReportsPrefString == "") jsonSaleReportsPrefString = "{}"
-
-                    var saveKeyList: Array<String> = TextUtils.split(keyListsPrefString, ",")
-
-                    try {
-                        val objSaleReport = JSONObject(jsonSaleReportsPrefString.toString())
-                        saveKeyList = arrAppend(saveKeyList, saveKeyValue)
-
-                        if (saveKeyList.size > intSaveSize) {
-                            Toast.makeText(
-                                this,
-                                "Can keep only ${intSaveSize} Records, So discarding the report named: ${saveKeyList[0].trim()}",
-                                Toast.LENGTH_LONG
-                            ).show()
-                            objSaleReport.remove(saveKeyList[0].trim())
-                            saveKeyList = arrRemove(saveKeyList, 0)
-                        }
-
-                        objSaleReport.put(saveKeyValue, displayMsg)
-                        with(sharedPref.edit()) {
-                            putString("ReportJSON", objSaleReport.toString())
-                            putString(
-                                "keyLists",
-                                saveKeyList.contentDeepToString().replace("[", "").replace("]", "")
-                            )
-                            commit()
-                        }
-                    } catch (e: JSONException) {
-                        e.printStackTrace()
-                    }
-
-                    alertDialog.cancel()
-                })
-                cancelDialogButton.setOnClickListener(View.OnClickListener {
-                    alertDialog.cancel()
-                })
-            }
         }
     }
-
 }
-
-fun arrAppend(arr: Array<String>, element: String): Array<String> {
-    val list: MutableList<String> = arr.toMutableList()
-    list.add(element)
-    return list.toTypedArray()
-}
-
-fun arrRemove(arr: Array<String>, index: Int): Array<String> {
-    if (index < 0 || index >= arr.size) {
-        return arr
-    }
-
-    val result = arr.toMutableList()
-    result.removeAt(index)
-    return result.toTypedArray()
-}
-

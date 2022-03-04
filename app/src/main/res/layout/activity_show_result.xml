@@ -2,8 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:background="@drawable/background_two">
 
 
@@ -46,6 +46,36 @@
         android:rotationY="-17"
         android:tint="#04122E"
         app:srcCompat="@android:drawable/ic_menu_save" />
+
+    <Button
+        android:id="@+id/home_btn"
+        style="@style/Widget.MaterialComponents.Button.TextButton.Dialog.Flush"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="11dp"
+        android:layout_marginBottom="59dp"
+        android:background="#D15454"
+        android:backgroundTint="#4A3F3F"
+        android:backgroundTintMode="multiply"
+        android:capitalize="none"
+        android:contentDescription="Start a New Calculation?"
+        android:fontFamily="sans-serif-medium"
+        android:foregroundTint="#D88484"
+        android:foregroundTintMode="multiply"
+        android:gravity="center_horizontal|top"
+        android:hapticFeedbackEnabled="true"
+        android:soundEffectsEnabled="true"
+        android:text="Calculate\n for\n New Sale?"
+        android:textColor="#131313"
+        android:textColorHighlight="#EFD0D0"
+        android:textColorHint="#320404"
+        android:textColorLink="#788197"
+        android:textSize="20sp"
+        android:textStyle="bold|italic"
+        app:cornerRadius="3dp"
+        app:strokeColor="#551212" />
 
 
 </RelativeLayout>
