@@ -1,27 +1,17 @@
 package com.example.homesalecalculator
 
-import android.annotation.SuppressLint
-import android.app.AlertDialog
-import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import android.text.Editable
-import android.text.TextUtils
 import android.text.TextWatcher
 import android.util.TypedValue
-import android.view.LayoutInflater
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isVisible
-import org.json.JSONException
-import org.json.JSONObject
 import java.lang.Float.parseFloat
-import java.text.SimpleDateFormat
-import java.util.*
 
 class GetInputs : AppCompatActivity() {
 
@@ -32,6 +22,7 @@ class GetInputs : AppCompatActivity() {
     var bankMrtg: String = ""
     var misc: String = ""
     var brokerComissionType: String = "PERCENTAGE"
+    var brokerCommissionUnit: String ="%"
 
     companion object {
         const val DISPLAY_MESSAGE = "DISPLAY_MESSAGE"
@@ -116,9 +107,11 @@ class GetInputs : AppCompatActivity() {
                         //  brokerComissionType = inputVal.toString()
                         if (brokerComissionType == "PERCENTAGE") {
                             displayMsg = "What is the Broker Commission? (till ex., 2.8 %)"
+                            brokerCommissionUnit= "%"
                             inputUnit = "%"
                         } else {
                             inputUnit = "SEK"
+                            brokerCommissionUnit="Kr"
                             displayMsg = "What is the Broker Commission? (till ex., SEK 44000)"
                         }
                         nextInputCategory = "BROKERAGE"
@@ -203,8 +196,7 @@ class GetInputs : AppCompatActivity() {
                     rgp.addView(rbn2)
 
                     rgp.setOnCheckedChangeListener { group, checkedId ->
-                        var text = if (checkedId == 1) "FIXED_COMISSION" else "PERCENTAGE"
-                        //getVal.text = text
+                        var text = if (checkedId == 1) "FIXED_COMMISSION" else "PERCENTAGE"
                         brokerComissionType = text
                         Toast.makeText(applicationContext, text, Toast.LENGTH_SHORT).show()
                     }
@@ -238,7 +230,7 @@ class GetInputs : AppCompatActivity() {
             val moneyFromHome = parseFloat(soldAmnt) - totToPay
 
             val displayMsg: String = "You Bought your house for SEK $paidAmnt \n" +
-                    "and If you sell your house for SEK $soldAmnt with a brokerage percentage of $bPercent and with the House Sale Tax of $taxPercent% on the profit SEK $profitAmount (excl. Brokerage)\n" +
+                    "and If you sell your house for SEK $soldAmnt with a brokerage on $brokerComissionType basis of $bPercent $brokerCommissionUnit and with the House Sale Tax of $taxPercent% on the profit SEK $profitAmount (excl. Brokerage)\n" +
                     "then, \n You need to pay SEK $brokerage as the broker commission and SEK $taxAmount to the Skatteverket \n" +
                     "with that, after deducting your Mortgage SEK ${bankMrtg} and miscellaneous expenditure (Hemnet/Advert Fee) SEK ${misc}, you will end up with SEK ${moneyFromHome} from your home \n  "
 

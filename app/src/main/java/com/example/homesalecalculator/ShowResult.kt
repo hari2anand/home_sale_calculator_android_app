@@ -18,7 +18,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class ShowResult : AppCompatActivity() {
-    val intSaveSize: Int = 15
+    val intSaveSize: Int = 20
 
     companion object {
         const val SALE_REPORT_MESSAGE: String = "SALE_REPORT_MESSAGE"
