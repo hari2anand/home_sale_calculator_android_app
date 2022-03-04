@@ -57,8 +57,6 @@ class MainActivity : AppCompatActivity() {
 
     fun loadButtonClicker() {
 
-        var displayMsg = ""
-
         val sharedPref = this.getSharedPreferences(
             "savedReport",
             Context.MODE_PRIVATE
@@ -103,14 +101,10 @@ class MainActivity : AppCompatActivity() {
                 radioGroup.addView(rbn1)
             }
 
-            alertDialogBuilder.setView(popupInputDialogView);
-            val alertDialog: AlertDialog = alertDialogBuilder.create();
-            alertDialog.show();
-            radioGroup.setOnCheckedChangeListener { radioGroup, int ->
+            radioGroup.setOnCheckedChangeListener { rgp, int ->
 
-                val reportSaveKey = findViewById<RadioButton>(int).text.toString().trim()
-                displayMsg = objSaleReport[reportSaveKey].toString().trim()
-                //getVal.text = text
+                val reportSaveKey = rgp.findViewById<RadioButton>(int).text.toString().trim()
+                openReportPage(objSaleReport[reportSaveKey].toString().trim())
 
                 Toast.makeText(
                     applicationContext,
@@ -119,11 +113,20 @@ class MainActivity : AppCompatActivity() {
                 ).show()
             }
 
-            val showReportIntent = Intent(this, ShowResult::class.java)
-            showReportIntent.putExtra(ShowResult.SALE_REPORT_MESSAGE, displayMsg)
-            showReportIntent.putExtra(ShowResult.IS_LOAD, "true")
-            startActivity(showReportIntent)
+            alertDialogBuilder.setView(popupInputDialogView);
+            val alertDialog: AlertDialog = alertDialogBuilder.create();
+            alertDialog.show();
+
+
         }
 
+    }
+
+    private fun openReportPage(displayMsg: String) {
+
+        val showReportIntent = Intent(this, ShowResult::class.java)
+        showReportIntent.putExtra(ShowResult.SALE_REPORT_MESSAGE, displayMsg)
+        showReportIntent.putExtra(ShowResult.IS_LOAD, "true")
+        startActivity(showReportIntent)
     }
 }
