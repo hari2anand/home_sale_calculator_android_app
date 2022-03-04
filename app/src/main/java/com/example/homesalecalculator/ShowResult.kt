@@ -21,9 +21,9 @@ class ShowResult : AppCompatActivity() {
     val intSaveSize: Int = 15
 
     companion object {
-        const val SALE_REPORT_MESSAGE: String = "SALE_REPORT"
-        const val SALE_AMOUNT: String = ""
-        const val IS_LOAD: String = "false"
+        const val SALE_REPORT_MESSAGE: String = "SALE_REPORT_MESSAGE"
+        const val SALE_AMOUNT: String = "SALE_AMOUNT"
+        const val IS_LOAD: String = "IS_LOAD"
 
     }
 
@@ -41,14 +41,16 @@ class ShowResult : AppCompatActivity() {
         dispMsg.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18.5F)
         dispMsg.text = displayMsg
 
-        val homeButton = findViewById<Button>(R.id.home_btn)
+
+        val homeButton = findViewById<ImageButton>(R.id.home_btn)
         homeButton.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
 
         val saveButton = findViewById<ImageButton>(R.id.saveButton)
-        if (isLoad != "false") {
+        if (isLoad != "IS_LOAD") {
+            //TODO: Celebration animation with sound
 
             saveButton.setOnClickListener {
 

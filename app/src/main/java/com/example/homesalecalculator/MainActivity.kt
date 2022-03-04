@@ -126,7 +126,7 @@ class MainActivity : AppCompatActivity() {
 
         val showReportIntent = Intent(this, ShowResult::class.java)
         showReportIntent.putExtra(ShowResult.SALE_REPORT_MESSAGE, displayMsg)
-        showReportIntent.putExtra(ShowResult.IS_LOAD, "true")
+        showReportIntent.putExtra(ShowResult.IS_LOAD, "IS_LOAD")
         startActivity(showReportIntent)
     }
 }

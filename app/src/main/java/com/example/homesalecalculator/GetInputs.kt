@@ -34,8 +34,8 @@ class GetInputs : AppCompatActivity() {
     var brokerComissionType: String = "PERCENTAGE"
 
     companion object {
-        const val DISPLAY_MESSAGE = "What is the sale price?"
-        const val INPUT_UNIT = "SEK"
+        const val DISPLAY_MESSAGE = "DISPLAY_MESSAGE"
+        const val INPUT_UNIT = "INPUT_UNIT"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -215,31 +215,36 @@ class GetInputs : AppCompatActivity() {
             }
         } else {
 
-            //TODO: Celebration animation with sound
 
-            var brokerage: Float =
+            val brokerage: Float =
                 if (brokerComissionType == "PERCENTAGE") (parseFloat(bPercent) * parseFloat(soldAmnt)) / 100 else parseFloat(
                     bPercent
                 )
+            val profitAmount: Float = if (parseFloat(soldAmnt) > parseFloat(paidAmnt)) {
+                parseFloat(soldAmnt) - parseFloat(paidAmnt)
+            } else parseFloat("0")
 
-            var taxAmount: Float = if (parseFloat(soldAmnt) > parseFloat(paidAmnt))
-                ((parseFloat(soldAmnt) - parseFloat((paidAmnt)) - brokerage) * parseFloat(taxPercent) / 100)
-            else
-                parseFloat("0")
+            val taxAmount: Float =
+                if (parseFloat(soldAmnt) > parseFloat(paidAmnt) && profitAmount > brokerage)
+                    ((parseFloat(soldAmnt) - parseFloat((paidAmnt)) - brokerage) * parseFloat(
+                        taxPercent
+                    ) / 100)
+                else
+                    parseFloat("0")
 
 
-            var totToPay: Float = parseFloat(bankMrtg) + taxAmount + brokerage + parseFloat(misc)
+            val totToPay: Float = parseFloat(bankMrtg) + taxAmount + brokerage + parseFloat(misc)
 
-            var moneyFromHome = parseFloat(soldAmnt) - totToPay
+            val moneyFromHome = parseFloat(soldAmnt) - totToPay
 
-            val displayMsg: String = "You Bought your house for SEK ${paidAmnt} \n" +
-                    "and If you sell your house for SEK ${soldAmnt} with a brokerage percentage of ${bPercent} and with the House Sale Tax of ${taxPercent}% on the profit\n" +
-                    "then, \n You need to pay SEK ${brokerage} as the broker commission and SEK ${taxAmount} to the Skatteverket \n" +
+            val displayMsg: String = "You Bought your house for SEK $paidAmnt \n" +
+                    "and If you sell your house for SEK $soldAmnt with a brokerage percentage of $bPercent and with the House Sale Tax of $taxPercent% on the profit SEK $profitAmount (excl. Brokerage)\n" +
+                    "then, \n You need to pay SEK $brokerage as the broker commission and SEK $taxAmount to the Skatteverket \n" +
                     "with that, after deducting your Mortgage SEK ${bankMrtg} and miscellaneous expenditure (Hemnet/Advert Fee) SEK ${misc}, you will end up with SEK ${moneyFromHome} from your home \n  "
 
             val showReportIntent = Intent(this, ShowResult::class.java)
             showReportIntent.putExtra(ShowResult.SALE_REPORT_MESSAGE, displayMsg)
-            showReportIntent.putExtra(ShowResult.IS_LOAD,"false")
+            showReportIntent.putExtra(ShowResult.IS_LOAD, "false")
             showReportIntent.putExtra(ShowResult.SALE_AMOUNT, soldAmnt)
             startActivity(showReportIntent)
 
