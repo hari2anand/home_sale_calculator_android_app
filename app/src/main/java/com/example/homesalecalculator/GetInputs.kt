@@ -44,14 +44,14 @@ class GetInputs : AppCompatActivity() {
         val displayMsg = intent.getStringExtra("DISPLAY_MESSAGE")
         val inputUnit = intent.getStringExtra("INPUT_UNIT")
 
-        val disp_msg = findViewById<TextView>(R.id.disp_msg)
-        val get_val = findViewById<TextView>(R.id.get_val)
-        val unit_disp = findViewById<TextView>(R.id.unit_disp)
+        val dispMsg = findViewById<TextView>(R.id.disp_msg)
+        val getVal = findViewById<TextView>(R.id.get_val)
+        val unitDisp = findViewById<TextView>(R.id.unit_disp)
 
-        disp_msg.text = displayMsg
-        unit_disp.text = inputUnit
+        dispMsg.text = displayMsg
+        unitDisp.text = inputUnit
 
-        buttonClicker("PURCHASE_PRICE", get_val)
+        buttonClicker("PURCHASE_PRICE", getVal)
     }
 
     @SuppressLint("WrongViewCast")
@@ -161,15 +161,15 @@ class GetInputs : AppCompatActivity() {
                 }
 
 
-                val disp_msg = findViewById<TextView>(R.id.disp_msg)
-                val get_val = findViewById<TextView>(R.id.get_val)
-                val unit_disp = findViewById<TextView>(R.id.unit_disp)
+                val dispMsg = findViewById<TextView>(R.id.disp_msg)
+                val getVal = findViewById<TextView>(R.id.get_val)
+                val unitDisp = findViewById<TextView>(R.id.unit_disp)
 
-                disp_msg.text = displayMsg
-                unit_disp.text = inputUnit
+                dispMsg.text = displayMsg
+                unitDisp.text = inputUnit
                 if (nxtinputCategory == "SALE_PRICE") {
-                    get_val.setVisibility(View.GONE)
-                    get_val.isEnabled = false
+                    getVal.setVisibility(View.GONE)
+                    getVal.isEnabled = false
 
                     val rgp = findViewById<View>(R.id.radio_group) as RadioGroup
 
@@ -204,16 +204,18 @@ class GetInputs : AppCompatActivity() {
 
                     rgp.setOnCheckedChangeListener { group, checkedId ->
                         var text = if (checkedId == 1) "FIXED_COMISSION" else "PERCENTAGE"
-                        //get_val.text = text
+                        //getVal.text = text
                         brokerComissionType = text
                         Toast.makeText(applicationContext, text, Toast.LENGTH_SHORT).show()
                     }
 
                 }
-                buttonClicker(nextInputCategory, get_val)
+                buttonClicker(nextInputCategory, getVal)
 
             }
         } else {
+
+            //TODO: Celebration animation with sound
 
             var brokerage: Float =
                 if (brokerComissionType == "PERCENTAGE") (parseFloat(bPercent) * parseFloat(soldAmnt)) / 100 else parseFloat(
@@ -230,22 +232,20 @@ class GetInputs : AppCompatActivity() {
 
             var moneyFromHome = parseFloat(soldAmnt) - totToPay
 
-            //setContentView(R.layout.show_result)
-
-            setContentView(R.layout.show_result)
-
             val displayMsg: String = "You Bought your house for SEK ${paidAmnt} \n" +
                     "and If you sell your house for SEK ${soldAmnt} with a brokerage percentage of ${bPercent} and with the House Sale Tax of ${taxPercent}% on the profit\n" +
                     "then, \n You need to pay SEK ${brokerage} as the broker commission and SEK ${taxAmount} to the Skatteverket \n" +
                     "with that, after deducting your Mortgage SEK ${bankMrtg} and miscellaneous expenditure (Hemnet/Advert Fee) SEK ${misc}, you will end up with SEK ${moneyFromHome} from your home \n  "
 
-            val disp_msg = findViewById<TextView>(R.id.disp_msg)
-            disp_msg.setTypeface(null, Typeface.BOLD)
-            disp_msg.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18.5F)
-            disp_msg.text = displayMsg
+            setContentView(R.layout.show_result)
+
+
+            val dispMsg = findViewById<TextView>(R.id.disp_msg)
+            dispMsg.setTypeface(null, Typeface.BOLD)
+            dispMsg.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18.5F)
+            dispMsg.text = displayMsg
 
             val saveButton = findViewById<ImageButton>(R.id.saveButton)
-
 
             saveButton.setOnClickListener {
 
@@ -290,6 +290,11 @@ class GetInputs : AppCompatActivity() {
                         saveKeyList = arrAppend(saveKeyList, saveKeyValue)
 
                         if (saveKeyList.size > intSaveSize) {
+                            Toast.makeText(
+                                this,
+                                "Can keep only ${intSaveSize} Records, So discarding the report named: ${saveKeyList[0].trim()}",
+                                Toast.LENGTH_LONG
+                            ).show()
                             objSaleReport.remove(saveKeyList[0].trim())
                             saveKeyList = arrRemove(saveKeyList, 0)
                         }
@@ -307,22 +312,13 @@ class GetInputs : AppCompatActivity() {
                         e.printStackTrace()
                     }
 
-                    val validateDataList = sharedPref.getString("ReportJSON", "")
-                    val saveKeyDataList = sharedPref.getString("keyLists", "")
-
-                    Toast.makeText(this, validateDataList, Toast.LENGTH_LONG).show()
-                    Toast.makeText(this, saveKeyDataList, Toast.LENGTH_LONG).show()
-                    Toast.makeText(this, jsonSaleReportsPrefString, Toast.LENGTH_LONG).show()
-
                     alertDialog.cancel()
                 })
                 cancelDialogButton.setOnClickListener(View.OnClickListener {
                     alertDialog.cancel()
                 })
             }
-
         }
-
     }
 
 }
