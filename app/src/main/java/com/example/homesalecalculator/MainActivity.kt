@@ -56,9 +56,9 @@ class MainActivity : AppCompatActivity() {
     fun buttonClicker(){
         val button= findViewById<Button>(R.id.submitButton)
         button.setOnClickListener{
-           val intent = Intent(this, getInputs::class.java)
-            intent.putExtra(getInputs.DISPLAY_MESSAGE, "How much you bought your house for?")
-            intent.putExtra(getInputs.INPUT_UNIT, "SEK ")
+           val intent = Intent(this, GetInputs::class.java)
+            intent.putExtra(GetInputs.DISPLAY_MESSAGE, "How much you bought your house for?")
+            intent.putExtra(GetInputs.INPUT_UNIT, "SEK ")
             startActivity(intent)
             //finish()
         }

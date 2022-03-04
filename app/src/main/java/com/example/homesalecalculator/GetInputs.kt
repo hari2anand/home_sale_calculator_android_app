@@ -15,14 +15,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import org.json.JSONException
+import org.json.JSONObject
 import java.lang.Float.parseFloat
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
-
-class getInputs : AppCompatActivity() {
+class GetInputs : AppCompatActivity() {
 
     var paidAmnt: String = ""
     var soldAmnt: String = ""
@@ -31,6 +30,7 @@ class getInputs : AppCompatActivity() {
     var bankMrtg: String = ""
     var misc: String = ""
     var brokerComissionType: String = "PERCENTAGE"
+    val intSaveSize: Int = 2
 
     companion object {
         const val DISPLAY_MESSAGE = "DISPLAY_MESSAGE" // What is the sale price?
@@ -41,14 +41,14 @@ class getInputs : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.get_inputs)
 
-        val display_msg = intent.getStringExtra("DISPLAY_MESSAGE")
+        val displayMsg = intent.getStringExtra("DISPLAY_MESSAGE")
         val inputUnit = intent.getStringExtra("INPUT_UNIT")
 
         val disp_msg = findViewById<TextView>(R.id.disp_msg)
         val get_val = findViewById<TextView>(R.id.get_val)
         val unit_disp = findViewById<TextView>(R.id.unit_disp)
 
-        disp_msg.text = display_msg
+        disp_msg.text = displayMsg
         unit_disp.text = inputUnit
 
         buttonClicker("PURCHASE_PRICE", get_val)
@@ -57,9 +57,9 @@ class getInputs : AppCompatActivity() {
     @SuppressLint("WrongViewCast")
     fun buttonClicker(nxtinputCategory: String, inputObject: TextView) {
         val inputVal = inputObject.text
-        var display_msg: String = ""
-        var inputUnit: String = ""
-        var nextInputCategory: String = ""
+        var displayMsg = ""
+        var inputUnit = ""
+        var nextInputCategory = ""
 
         if (nxtinputCategory != "FINAL_PAGE") {
 
@@ -98,16 +98,16 @@ class getInputs : AppCompatActivity() {
 
                 when (nxtinputCategory) {
                     "PURCHASE_PRICE" -> {
-                        paidAmnt = inputVal.toString();
+                        paidAmnt = inputVal.toString()
                         inputUnit = "SEK"
-                        display_msg =
+                        displayMsg =
                             "You bought your house for ${paidAmnt} \n And for How much are you planning to Sell it?"
                         nextInputCategory = "SALE_PRICE"
 
                     }
                     "SALE_PRICE" -> {
                         soldAmnt = inputVal.toString()
-                        display_msg =
+                        displayMsg =
                             "What's your agreement with the Real Estate Agent"
                         nextInputCategory = "BROKERAGE_SELECTION"
 
@@ -115,11 +115,11 @@ class getInputs : AppCompatActivity() {
                     "BROKERAGE_SELECTION" -> {
                         //  brokerComissionType = inputVal.toString()
                         if (brokerComissionType == "PERCENTAGE") {
-                            display_msg = "What is the Broker Commission? (till ex., 2.8 %)"
+                            displayMsg = "What is the Broker Commission? (till ex., 2.8 %)"
                             inputUnit = "%"
                         } else {
                             inputUnit = "SEK"
-                            display_msg = "What is the Broker Commission? (till ex., SEK 44000)"
+                            displayMsg = "What is the Broker Commission? (till ex., SEK 44000)"
                         }
                         nextInputCategory = "BROKERAGE"
 
@@ -127,7 +127,7 @@ class getInputs : AppCompatActivity() {
                     "BROKERAGE" -> {
                         bPercent = inputVal.toString()
                         inputUnit = "%"
-                        display_msg =
+                        displayMsg =
                             "What is the local Sales Tax (in %) (till ex., 22% on Profit excl Brokerage)?"
                         nextInputCategory = "SALE_TAX"
 
@@ -135,14 +135,14 @@ class getInputs : AppCompatActivity() {
                     "SALE_TAX" -> {
                         taxPercent = inputVal.toString()
                         inputUnit = "SEK"
-                        display_msg = "Do you still have Mortgage on the house? How Much?"
+                        displayMsg = "Do you still have Mortgage on the house? How Much?"
                         nextInputCategory = "MORTGAGE"
 
                     }
                     "MORTGAGE" -> {
                         bankMrtg = inputVal.toString()
                         inputUnit = "SEK"
-                        display_msg =
+                        displayMsg =
                             "Do you want to add miscellaneous expenditures (like Advt/hemnet charges)"
                         nextInputCategory = "MISC"
 
@@ -150,7 +150,7 @@ class getInputs : AppCompatActivity() {
                     "MISC" -> {
                         misc = inputVal.toString()
                         inputUnit = "SEK"
-                        display_msg =
+                        displayMsg =
                             "Do you want to add miscellaneous expenditures (like Advt/hemnet charges)"
                         nextInputCategory = "FINAL_PAGE"
 
@@ -165,7 +165,7 @@ class getInputs : AppCompatActivity() {
                 val get_val = findViewById<TextView>(R.id.get_val)
                 val unit_disp = findViewById<TextView>(R.id.unit_disp)
 
-                disp_msg.text = display_msg
+                disp_msg.text = displayMsg
                 unit_disp.text = inputUnit
                 if (nxtinputCategory == "SALE_PRICE") {
                     get_val.setVisibility(View.GONE)
@@ -234,7 +234,7 @@ class getInputs : AppCompatActivity() {
 
             setContentView(R.layout.show_result)
 
-            val display_msg: String = "You Bought your house for SEK ${paidAmnt} \n" +
+            val displayMsg: String = "You Bought your house for SEK ${paidAmnt} \n" +
                     "and If you sell your house for SEK ${soldAmnt} with a brokerage percentage of ${bPercent} and with the House Sale Tax of ${taxPercent}% on the profit\n" +
                     "then, \n You need to pay SEK ${brokerage} as the broker commission and SEK ${taxAmount} to the Skatteverket \n" +
                     "with that, after deducting your Mortgage SEK ${bankMrtg} and miscellaneous expenditure (Hemnet/Advert Fee) SEK ${misc}, you will end up with SEK ${moneyFromHome} from your home \n  "
@@ -242,7 +242,7 @@ class getInputs : AppCompatActivity() {
             val disp_msg = findViewById<TextView>(R.id.disp_msg)
             disp_msg.setTypeface(null, Typeface.BOLD)
             disp_msg.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18.5F)
-            disp_msg.text = display_msg
+            disp_msg.text = displayMsg
 
             val saveButton = findViewById<ImageButton>(R.id.saveButton)
 
@@ -264,56 +264,55 @@ class getInputs : AppCompatActivity() {
                 saveTextName.setText("calculation_on_sale_sek_${soldAmnt}_" + timeStamp)
                 val saveDataBtn = popupInputDialogView.findViewById<Button>(R.id.save_btn)
                 val cancelDialogButton = popupInputDialogView.findViewById<Button>(R.id.cancel_btn)
+
                 saveDataBtn.setOnClickListener(View.OnClickListener {
                     val saveKeyField = popupInputDialogView.findViewById<TextView>(R.id.saveKey)
-                    val saveKey: String = saveKeyField.getText().toString()
+                    val saveKeyValue: String = saveKeyField.text.toString()
 
-                    val saveKeyNameArray = arrayOf("Save Key", "Calculation Info")
-                    val dataArr = arrayOf(saveKey, display_msg)
-
-                    //TODO: Fetch array from pref (if not create one)
-                    //TODO: check for the size and Delete/Remove the first item in array if exceeds size 14
-                    //TODO: Add new key to the array
-                    //TODO: Fetch map(key value pair) from pref
-                    //TODO: Delete key/value pair (if exceeds 15) shifted key
-                    //TODO: Add new key value pai
-                    //TODO: OnloadData find the name and fetch it
                     val sharedPref = this.getSharedPreferences(
                         "savedReport",
                         Context.MODE_PRIVATE
-                    ) //?: return ArrayList<Map<String, Any?>>()
+                    )
 
-                    //val itemDataList = ArrayList<Map<String, Any?>>()
-                    val serialized = sharedPref.getString("ReportMap", "Save Key")
-                    Toast.makeText(this, serialized, Toast.LENGTH_LONG).show();
-                    val itemDataList: MutableList<Array<String>> =
-                        (mutableListOf(TextUtils.split(serialized, ",")))
-                    itemDataList.add(dataArr)
-                    //val saveKeyLen = saveKeyNameArray.size
-                   /* for (i in 0 until saveKeyLen) {
-                        val listItemMap: MutableMap<String, Any?> = HashMap()
-                        listItemMap["title"] = saveKeyNameArray[i]
-                        listItemMap["data"] = dataArr[i]
-                        itemDataList.add(listItemMap)
-                    }*/
-                    //TODO: Save the array back to Preference
+                    var jsonSaleReportsPrefString = sharedPref.getString("ReportJSON", "")
+                    var keyListsPrefString = sharedPref.getString("keyLists", "")
 
+                    Toast.makeText(this, jsonSaleReportsPrefString, Toast.LENGTH_LONG).show();
 
-                    with(sharedPref.edit()) {
-                        putString("ReportMap", TextUtils.join(",", itemDataList));
-                        commit()
+                    Toast.makeText(this, keyListsPrefString, Toast.LENGTH_LONG).show();
+
+                    if (jsonSaleReportsPrefString == "") jsonSaleReportsPrefString = "{}"
+
+                    var saveKeyList: Array<String> = TextUtils.split(keyListsPrefString, ",")
+
+                    try {
+                        val objSaleReport = JSONObject(jsonSaleReportsPrefString.toString())
+                        saveKeyList = arrAppend(saveKeyList, saveKeyValue)
+
+                        if (saveKeyList.size > intSaveSize) {
+                            objSaleReport.remove(saveKeyList[0].trim())
+                            saveKeyList = arrRemove(saveKeyList, 0)
+                        }
+
+                        objSaleReport.put(saveKeyValue, displayMsg)
+                        with(sharedPref.edit()) {
+                            putString("ReportJSON", objSaleReport.toString())
+                            putString(
+                                "keyLists",
+                                saveKeyList.contentDeepToString().replace("[", "").replace("]", "")
+                            )
+                            commit()
+                        }
+                    } catch (e: JSONException) {
+                        e.printStackTrace()
                     }
 
-                    val checkitemDataList = sharedPref.getString("ReportMap", "Save Key")
+                    val validateDataList = sharedPref.getString("ReportJSON", "")
+                    val saveKeyDataList = sharedPref.getString("keyLists", "")
 
-                    Toast.makeText(this, checkitemDataList, Toast.LENGTH_LONG).show()
-                    Toast.makeText(this, serialized, Toast.LENGTH_LONG).show()
-
-                    /*val sharedPref = this?.getSharedPreferences("savedReport", Context.MODE_PRIVATE)
-                    with (sharedPref.edit()) {
-                        putStringArrayList("test", values)(itemDataList.toString(), "savedReport")
-                        apply()
-                    }*/
+                    Toast.makeText(this, validateDataList, Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, saveKeyDataList, Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, jsonSaleReportsPrefString, Toast.LENGTH_LONG).show()
 
                     alertDialog.cancel()
                 })
@@ -326,19 +325,21 @@ class getInputs : AppCompatActivity() {
 
     }
 
-    fun saveCalculation() {
+}
 
+fun arrAppend(arr: Array<String>, element: String): Array<String> {
+    val list: MutableList<String> = arr.toMutableList()
+    list.add(element)
+    return list.toTypedArray()
+}
+
+fun arrRemove(arr: Array<String>, index: Int): Array<String> {
+    if (index < 0 || index >= arr.size) {
+        return arr
     }
 
-    fun remove(arr: IntArray, index: Int): IntArray {
-        if (index < 0 || index >= arr.size) {
-            return arr
-        }
-
-        val result = arr.toMutableList()
-        result.removeAt(index)
-        return result.toIntArray()
-    }
-
+    val result = arr.toMutableList()
+    result.removeAt(index)
+    return result.toTypedArray()
 }
 
