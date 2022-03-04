@@ -63,15 +63,17 @@ class MainActivity : AppCompatActivity() {
         )
 
         val jsonSaleReportsPrefString = sharedPref.getString("ReportJSON", "")
-        val objSaleReport = JSONObject(jsonSaleReportsPrefString.toString())
         val keyListsPrefString = sharedPref.getString("keyLists", "")
 
-        if (jsonSaleReportsPrefString == "" && keyListsPrefString == "") Toast.makeText(
-            this,
-            "No Saved Reports Found",
-            Toast.LENGTH_LONG
-        )
+        if (jsonSaleReportsPrefString == "" && keyListsPrefString == "") {
+            Toast.makeText(
+                this,
+                "No Saved Records Found!",
+                Toast.LENGTH_LONG
+            ).show()
+        }
         else {
+            val objSaleReport = JSONObject(jsonSaleReportsPrefString.toString())
             val alertDialogBuilder: AlertDialog.Builder = AlertDialog.Builder(this)
             val layoutInflater = LayoutInflater.from(this)
             val popupInputDialogView: View = layoutInflater.inflate(R.layout.base_empty_page, null)

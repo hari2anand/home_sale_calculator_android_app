@@ -8,11 +8,14 @@
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
         android:layout_marginStart="-4dp"
-        android:layout_marginTop="49dp">
+        android:layout_marginTop="49dp"
+        android:background="#7E6778CC">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="#E86969"
+            android:backgroundTint="#94529559"
             android:orientation="vertical">
 
             <RadioGroup
