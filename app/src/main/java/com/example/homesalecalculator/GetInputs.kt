@@ -179,20 +179,7 @@ class GetInputs : AppCompatActivity() {
 
                     val rbn1 = RadioButton(this)
                     val rbn2 = RadioButton(this)
-                    rbn1.buttonTintList = colorStateList
-                    rbn2.buttonTintList = colorStateList
-                    rbn1.id = View.generateViewId()
-                    rbn1.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 25.5F)
-                    rbn1.setTextColor(Color.parseColor("#000000"))
-                    rbn1.setTypeface(null, Typeface.BOLD)
-                    rbn1.setTypeface(null, Typeface.BOLD)
-                    rbn1.text = string.broker_commission_fixed_radio_button.toString()
-                    rbn2.id = View.generateViewId()
-                    rbn2.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 25.5F)
-                    rbn2.setTextColor(Color.parseColor("#000000"))
-                    rbn2.setTypeface(null, Typeface.BOLD)
-                    rbn2.setTypeface(null, Typeface.BOLD)
-                    rbn2.text = string.broker_commission_percentage_radio_button.toString()
+
                     with(rgp) {
                         rbn1.buttonTintList = colorStateList
                         rbn2.buttonTintList = colorStateList
@@ -201,13 +188,13 @@ class GetInputs : AppCompatActivity() {
                         rbn1.setTextColor(Color.parseColor("#000000"))
                         rbn1.setTypeface(null, Typeface.BOLD)
                         rbn1.setTypeface(null, Typeface.BOLD)
-                        rbn1.text = string.broker_commission_fixed_radio_button.toString()
                         rbn2.id = View.generateViewId()
                         rbn2.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 25.5F)
                         rbn2.setTextColor(Color.parseColor("#000000"))
                         rbn2.setTypeface(null, Typeface.BOLD)
                         rbn2.setTypeface(null, Typeface.BOLD)
-                        rbn2.text = string.broker_commission_percentage_radio_button.toString()
+                        rbn1.text = "Fixed Commission \n \n OR"
+                        rbn2.text = "\nPercentage on Sale Value"
                         addView(rbn1)
                         addView(rbn2)
                     }
