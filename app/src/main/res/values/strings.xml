@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">Home Sale Calculator</string>
+    <string name="app_name">"Harish's Home Sale Calculator"</string>
+    <string name="home_button">Take Me Home Button</string>
+    <string name="save_button">Save Sale Report Button</string>
 </resources>

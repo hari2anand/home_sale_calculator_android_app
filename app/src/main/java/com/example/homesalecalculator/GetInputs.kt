@@ -1,5 +1,6 @@
 package com.example.homesalecalculator
 
+import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.Typeface
@@ -10,10 +11,10 @@ import android.util.TypedValue
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import com.example.homesalecalculator.R.*
 import java.lang.Float.parseFloat
 
-
-class getInputs : AppCompatActivity() {
+class GetInputs : AppCompatActivity() {
 
     var paidAmnt: String = ""
     var soldAmnt: String = ""
@@ -22,38 +23,39 @@ class getInputs : AppCompatActivity() {
     var bankMrtg: String = ""
     var misc: String = ""
     var brokerComissionType: String = "PERCENTAGE"
+    var brokerCommissionUnit: String = "%"
 
     companion object {
-        const val DISPLAY_MESSAGE = "DISPLAY_MESSAGE" // What is the sale price?
-        const val INPUT_UNIT = "INPUT_UNIT" // eg., SEK or %
+        const val DISPLAY_MESSAGE = "DISPLAY_MESSAGE"
+        const val INPUT_UNIT = "INPUT_UNIT"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.get_inputs)
+        setContentView(layout.get_inputs)
 
-        val display_msg = intent.getStringExtra("DISPLAY_MESSAGE")
+        val displayMsg = intent.getStringExtra("DISPLAY_MESSAGE")
         val inputUnit = intent.getStringExtra("INPUT_UNIT")
 
-        val disp_msg = findViewById<TextView>(R.id.disp_msg)
-        val get_val = findViewById<TextView>(R.id.get_val)
-        val unit_disp = findViewById<TextView>(R.id.unit_disp)
+        val dispMsg = findViewById<TextView>(id.disp_msg)
+        val getVal = findViewById<TextView>(id.get_val)
+        val unitDisp = findViewById<TextView>(id.unit_disp)
 
-        disp_msg.text = display_msg
-        unit_disp.text = inputUnit
+        dispMsg.text = displayMsg
+        unitDisp.text = inputUnit
 
-        buttonClicker("PURCHASE_PRICE", get_val)
+        buttonClicker("PURCHASE_PRICE", getVal)
     }
 
     fun buttonClicker(nxtinputCategory: String, inputObject: TextView) {
         val inputVal = inputObject.text
-        var display_msg: String = ""
-        var inputUnit: String = ""
-        var nextInputCategory: String = ""
+        var displayMsg = ""
+        var inputUnit = ""
+        var nextInputCategory = ""
 
         if (nxtinputCategory != "FINAL_PAGE") {
 
-            val button = findViewById<Button>(R.id.nextbtn)
+            val button = findViewById<Button>(id.nextbtn)
 
             if (nxtinputCategory == "BROKERAGE_SELECTION") button.setEnabled(true)
 
@@ -84,20 +86,20 @@ class getInputs : AppCompatActivity() {
             inputObject.addTextChangedListener(textWatcher)
             button.setOnClickListener {
 
-                setContentView(R.layout.get_inputs)
+                setContentView(layout.get_inputs)
 
                 when (nxtinputCategory) {
                     "PURCHASE_PRICE" -> {
-                        paidAmnt = inputVal.toString();
+                        paidAmnt = inputVal.toString()
                         inputUnit = "SEK"
-                        display_msg =
+                        displayMsg =
                             "You bought your house for ${paidAmnt} \n And for How much are you planning to Sell it?"
                         nextInputCategory = "SALE_PRICE"
 
                     }
                     "SALE_PRICE" -> {
                         soldAmnt = inputVal.toString()
-                        display_msg =
+                        displayMsg =
                             "What's your agreement with the Real Estate Agent"
                         nextInputCategory = "BROKERAGE_SELECTION"
 
@@ -105,11 +107,13 @@ class getInputs : AppCompatActivity() {
                     "BROKERAGE_SELECTION" -> {
                         //  brokerComissionType = inputVal.toString()
                         if (brokerComissionType == "PERCENTAGE") {
-                            display_msg = "What is the Broker Commission? (till ex., 2.8 %)"
+                            displayMsg = "What is the Broker Commission? (till ex., 2.8 %)"
+                            brokerCommissionUnit = "%"
                             inputUnit = "%"
                         } else {
                             inputUnit = "SEK"
-                            display_msg = "What is the Broker Commission? (till ex., SEK 44000)"
+                            brokerCommissionUnit = "Kr"
+                            displayMsg = "What is the Broker Commission? (till ex., SEK 44000)"
                         }
                         nextInputCategory = "BROKERAGE"
 
@@ -117,7 +121,7 @@ class getInputs : AppCompatActivity() {
                     "BROKERAGE" -> {
                         bPercent = inputVal.toString()
                         inputUnit = "%"
-                        display_msg =
+                        displayMsg =
                             "What is the local Sales Tax (in %) (till ex., 22% on Profit excl Brokerage)?"
                         nextInputCategory = "SALE_TAX"
 
@@ -125,14 +129,14 @@ class getInputs : AppCompatActivity() {
                     "SALE_TAX" -> {
                         taxPercent = inputVal.toString()
                         inputUnit = "SEK"
-                        display_msg = "Do you still have Mortgage on the house? How Much?"
+                        displayMsg = "Do you still have Mortgage on the house? How Much?"
                         nextInputCategory = "MORTGAGE"
 
                     }
                     "MORTGAGE" -> {
                         bankMrtg = inputVal.toString()
                         inputUnit = "SEK"
-                        display_msg =
+                        displayMsg =
                             "Do you want to add miscellaneous expenditures (like Advt/hemnet charges)"
                         nextInputCategory = "MISC"
 
@@ -140,7 +144,7 @@ class getInputs : AppCompatActivity() {
                     "MISC" -> {
                         misc = inputVal.toString()
                         inputUnit = "SEK"
-                        display_msg =
+                        displayMsg =
                             "Do you want to add miscellaneous expenditures (like Advt/hemnet charges)"
                         nextInputCategory = "FINAL_PAGE"
 
@@ -151,17 +155,17 @@ class getInputs : AppCompatActivity() {
                 }
 
 
-                val disp_msg = findViewById<TextView>(R.id.disp_msg)
-                val get_val = findViewById<TextView>(R.id.get_val)
-                val unit_disp = findViewById<TextView>(R.id.unit_disp)
+                val dispMsg = findViewById<TextView>(id.disp_msg)
+                val getVal = findViewById<TextView>(id.get_val)
+                val unitDisp = findViewById<TextView>(id.unit_disp)
 
-                disp_msg.text = display_msg
-                unit_disp.text = inputUnit
+                dispMsg.text = displayMsg
+                unitDisp.text = inputUnit
                 if (nxtinputCategory == "SALE_PRICE") {
-                    get_val.setVisibility(View.GONE)
-                    get_val.isEnabled = false
+                    getVal.setVisibility(View.GONE)
+                    getVal.isEnabled = false
 
-                    val rgp = findViewById<View>(R.id.radio_group) as RadioGroup
+                    val rgp = findViewById<View>(id.radio_group) as RadioGroup
 
                     val colorStateList = ColorStateList(
                         arrayOf(
@@ -175,65 +179,71 @@ class getInputs : AppCompatActivity() {
 
                     val rbn1 = RadioButton(this)
                     val rbn2 = RadioButton(this)
-                    rbn1.buttonTintList= colorStateList
-                    rbn2.buttonTintList= colorStateList
-                    rbn1.id = View.generateViewId()
-                    rbn1.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 25.5F)
-                    rbn1.setTextColor(Color.parseColor("#000000"))
-                    rbn1.setTypeface(null, Typeface.BOLD)
-                    rbn1.setTypeface(null, Typeface.BOLD)
-                    rbn1.text = "Fixed Commission \n \n OR"
-                    rbn2.id = View.generateViewId()
-                    rbn2.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 25.5F)
-                    rbn2.setTextColor(Color.parseColor("#000000"))
-                    rbn2.setTypeface(null, Typeface.BOLD)
-                    rbn2.setTypeface(null, Typeface.BOLD)
-                    rbn2.text = "\nPercentage on Sale Value"
-                    rgp.addView(rbn1)
-                    rgp.addView(rbn2)
+
+                    with(rgp) {
+                        rbn1.buttonTintList = colorStateList
+                        rbn2.buttonTintList = colorStateList
+                        rbn1.id = View.generateViewId()
+                        rbn1.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 25.5F)
+                        rbn1.setTextColor(Color.parseColor("#000000"))
+                        rbn1.setTypeface(null, Typeface.BOLD)
+                        rbn1.setTypeface(null, Typeface.BOLD)
+                        rbn2.id = View.generateViewId()
+                        rbn2.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 25.5F)
+                        rbn2.setTextColor(Color.parseColor("#000000"))
+                        rbn2.setTypeface(null, Typeface.BOLD)
+                        rbn2.setTypeface(null, Typeface.BOLD)
+                        rbn1.text = "Fixed Commission \n \n OR"
+                        rbn2.text = "\nPercentage on Sale Value"
+                        addView(rbn1)
+                        addView(rbn2)
+                    }
 
                     rgp.setOnCheckedChangeListener { group, checkedId ->
-                        var text = if (checkedId == 1) "FIXED_COMISSION" else "PERCENTAGE"
-                        //get_val.text = text
+                        val radioButtonTxt = group.findViewById<RadioButton>(checkedId).text.toString().trim()
+                        val text = if (radioButtonTxt == "Percentage on Sale Value") "PERCENTAGE" else "FIXED_COMMISSION"
                         brokerComissionType = text
                         Toast.makeText(applicationContext, text, Toast.LENGTH_SHORT).show()
                     }
 
                 }
-                buttonClicker(nextInputCategory, get_val)
+                buttonClicker(nextInputCategory, getVal)
 
             }
         } else {
 
-            var brokerage: Float =
+
+            val brokerage: Float =
                 if (brokerComissionType == "PERCENTAGE") (parseFloat(bPercent) * parseFloat(soldAmnt)) / 100 else parseFloat(
                     bPercent
                 )
+            val profitAmount: Float = if (parseFloat(soldAmnt) > parseFloat(paidAmnt)) {
+                parseFloat(soldAmnt) - parseFloat(paidAmnt)
+            } else parseFloat("0")
 
-            var taxAmount: Float = if (parseFloat(soldAmnt) > parseFloat(paidAmnt))
-                ((parseFloat(soldAmnt) - parseFloat((paidAmnt)) - brokerage) * parseFloat(taxPercent) / 100)
-            else
-                parseFloat("0")
+            val taxAmount: Float =
+                if (parseFloat(soldAmnt) > parseFloat(paidAmnt) && profitAmount > brokerage)
+                    ((parseFloat(soldAmnt) - parseFloat((paidAmnt)) - brokerage) * parseFloat(
+                        taxPercent
+                    ) / 100)
+                else
+                    parseFloat("0")
 
 
-            var totToPay: Float = parseFloat(bankMrtg) + taxAmount + brokerage + parseFloat(misc)
+            val totToPay: Float = parseFloat(bankMrtg) + taxAmount + brokerage + parseFloat(misc)
 
-            var moneyFromHome = parseFloat(soldAmnt) - totToPay
+            val moneyFromHome = parseFloat(soldAmnt) - totToPay
 
-            //setContentView(R.layout.show_result)
-
-            setContentView(R.layout.show_result)
-
-            val display_msg: String = "You Bought your house for SEK ${paidAmnt} \n" +
-                    "and If you sell your house for SEK ${soldAmnt} with a brokerage percentage of ${bPercent} and with the House Sale Tax of ${taxPercent}% on the profit\n" +
-                    "then, \n You need to pay SEK ${brokerage} as the broker commission and SEK ${taxAmount} to the Skatteverket \n" +
+            val displaySaleReportMsg: String = "You Bought your house for SEK $paidAmnt \n" +
+                    "and If you sell your house for SEK $soldAmnt with a brokerage on $brokerComissionType basis of $bPercent $brokerCommissionUnit and with the House Sale Tax of $taxPercent% on the profit SEK $profitAmount (excl. Brokerage)\n" +
+                    "then, \n You need to pay SEK $brokerage as the broker commission and SEK $taxAmount to the Skatteverket \n" +
                     "with that, after deducting your Mortgage SEK ${bankMrtg} and miscellaneous expenditure (Hemnet/Advert Fee) SEK ${misc}, you will end up with SEK ${moneyFromHome} from your home \n  "
 
-            val disp_msg = findViewById<TextView>(R.id.disp_msg)
-            disp_msg.setTypeface(null, Typeface.BOLD)
-            disp_msg.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18.5F)
-            disp_msg.text = display_msg
-
+            val showReportIntent = Intent(this, ShowResult::class.java)
+            showReportIntent.putExtra(ShowResult.SALE_REPORT_MESSAGE, displaySaleReportMsg)
+            showReportIntent.putExtra(ShowResult.IS_LOAD, "false")
+            showReportIntent.putExtra(ShowResult.SALE_AMOUNT, soldAmnt)
+            startActivity(showReportIntent)
 
         }
     }

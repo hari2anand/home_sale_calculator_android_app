@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/background_two">
+
+    <TextView
+        android:id="@+id/disp_msg"
+        android:layout_width="401dp"
+        android:layout_height="332dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="83dp"
+        android:layout_marginEnd="12dp"
+        android:fontFamily="casual"
+        android:gravity="center_horizontal"
+        android:lineSpacingExtra="4sp"
+        android:shadowColor="#E66363"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="#023C3A"
+        android:textIsSelectable="true"
+        android:textSize="9pt"
+        android:textStyle="bold|italic"
+        android:typeface="serif" />
+
+    <ImageButton
+        android:id="@+id/saveButton"
+        android:layout_width="150dp"
+        android:layout_height="163dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="0dp"
+        android:adjustViewBounds="true"
+        android:background="#00FFFFFF"
+        android:backgroundTint="#1EB8C7CC"
+        android:cropToPadding="true"
+        android:fadingEdge="horizontal|vertical|none"
+        android:rotationX="4"
+        android:rotationY="-17"
+        app:srcCompat="@android:drawable/ic_menu_save"
+        android:contentDescription="@string/save_button"
+        app:tint="#04122E" />
+
+    <ImageButton
+        android:id="@+id/home_btn"
+        android:layout_width="99dp"
+        android:layout_height="90dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="144dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="11dp"
+        android:layout_toEndOf="@+id/saveButton"
+        android:backgroundTint="#6BFF7D41"
+        android:backgroundTintMode="multiply"
+        android:contentDescription="@string/home_button"
+        android:rotation="0"
+        android:rotationY="0"
+        app:srcCompat="@drawable/ic_go_home" />
+
+
+</RelativeLayout>
