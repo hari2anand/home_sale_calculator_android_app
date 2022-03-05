@@ -11,6 +11,7 @@ import android.util.TypedValue
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import com.example.homesalecalculator.R.*
 import java.lang.Float.parseFloat
 
 class GetInputs : AppCompatActivity() {
@@ -22,7 +23,7 @@ class GetInputs : AppCompatActivity() {
     var bankMrtg: String = ""
     var misc: String = ""
     var brokerComissionType: String = "PERCENTAGE"
-    var brokerCommissionUnit: String ="%"
+    var brokerCommissionUnit: String = "%"
 
     companion object {
         const val DISPLAY_MESSAGE = "DISPLAY_MESSAGE"
@@ -31,14 +32,14 @@ class GetInputs : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.get_inputs)
+        setContentView(layout.get_inputs)
 
         val displayMsg = intent.getStringExtra("DISPLAY_MESSAGE")
         val inputUnit = intent.getStringExtra("INPUT_UNIT")
 
-        val dispMsg = findViewById<TextView>(R.id.disp_msg)
-        val getVal = findViewById<TextView>(R.id.get_val)
-        val unitDisp = findViewById<TextView>(R.id.unit_disp)
+        val dispMsg = findViewById<TextView>(id.disp_msg)
+        val getVal = findViewById<TextView>(id.get_val)
+        val unitDisp = findViewById<TextView>(id.unit_disp)
 
         dispMsg.text = displayMsg
         unitDisp.text = inputUnit
@@ -54,7 +55,7 @@ class GetInputs : AppCompatActivity() {
 
         if (nxtinputCategory != "FINAL_PAGE") {
 
-            val button = findViewById<Button>(R.id.nextbtn)
+            val button = findViewById<Button>(id.nextbtn)
 
             if (nxtinputCategory == "BROKERAGE_SELECTION") button.setEnabled(true)
 
@@ -85,7 +86,7 @@ class GetInputs : AppCompatActivity() {
             inputObject.addTextChangedListener(textWatcher)
             button.setOnClickListener {
 
-                setContentView(R.layout.get_inputs)
+                setContentView(layout.get_inputs)
 
                 when (nxtinputCategory) {
                     "PURCHASE_PRICE" -> {
@@ -107,11 +108,11 @@ class GetInputs : AppCompatActivity() {
                         //  brokerComissionType = inputVal.toString()
                         if (brokerComissionType == "PERCENTAGE") {
                             displayMsg = "What is the Broker Commission? (till ex., 2.8 %)"
-                            brokerCommissionUnit= "%"
+                            brokerCommissionUnit = "%"
                             inputUnit = "%"
                         } else {
                             inputUnit = "SEK"
-                            brokerCommissionUnit="Kr"
+                            brokerCommissionUnit = "Kr"
                             displayMsg = "What is the Broker Commission? (till ex., SEK 44000)"
                         }
                         nextInputCategory = "BROKERAGE"
@@ -154,9 +155,9 @@ class GetInputs : AppCompatActivity() {
                 }
 
 
-                val dispMsg = findViewById<TextView>(R.id.disp_msg)
-                val getVal = findViewById<TextView>(R.id.get_val)
-                val unitDisp = findViewById<TextView>(R.id.unit_disp)
+                val dispMsg = findViewById<TextView>(id.disp_msg)
+                val getVal = findViewById<TextView>(id.get_val)
+                val unitDisp = findViewById<TextView>(id.unit_disp)
 
                 dispMsg.text = displayMsg
                 unitDisp.text = inputUnit
@@ -164,7 +165,7 @@ class GetInputs : AppCompatActivity() {
                     getVal.setVisibility(View.GONE)
                     getVal.isEnabled = false
 
-                    val rgp = findViewById<View>(R.id.radio_group) as RadioGroup
+                    val rgp = findViewById<View>(id.radio_group) as RadioGroup
 
                     val colorStateList = ColorStateList(
                         arrayOf(
@@ -185,18 +186,35 @@ class GetInputs : AppCompatActivity() {
                     rbn1.setTextColor(Color.parseColor("#000000"))
                     rbn1.setTypeface(null, Typeface.BOLD)
                     rbn1.setTypeface(null, Typeface.BOLD)
-                    rbn1.text = "Fixed Commission \n \n OR"
+                    rbn1.text = string.broker_commission_fixed_radio_button.toString()
                     rbn2.id = View.generateViewId()
                     rbn2.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 25.5F)
                     rbn2.setTextColor(Color.parseColor("#000000"))
                     rbn2.setTypeface(null, Typeface.BOLD)
                     rbn2.setTypeface(null, Typeface.BOLD)
-                    rbn2.text = "\nPercentage on Sale Value"
-                    rgp.addView(rbn1)
-                    rgp.addView(rbn2)
+                    rbn2.text = string.broker_commission_percentage_radio_button.toString()
+                    with(rgp) {
+                        rbn1.buttonTintList = colorStateList
+                        rbn2.buttonTintList = colorStateList
+                        rbn1.id = View.generateViewId()
+                        rbn1.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 25.5F)
+                        rbn1.setTextColor(Color.parseColor("#000000"))
+                        rbn1.setTypeface(null, Typeface.BOLD)
+                        rbn1.setTypeface(null, Typeface.BOLD)
+                        rbn1.text = string.broker_commission_fixed_radio_button.toString()
+                        rbn2.id = View.generateViewId()
+                        rbn2.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 25.5F)
+                        rbn2.setTextColor(Color.parseColor("#000000"))
+                        rbn2.setTypeface(null, Typeface.BOLD)
+                        rbn2.setTypeface(null, Typeface.BOLD)
+                        rbn2.text = string.broker_commission_percentage_radio_button.toString()
+                        addView(rbn1)
+                        addView(rbn2)
+                    }
 
                     rgp.setOnCheckedChangeListener { group, checkedId ->
-                        var text = if (checkedId == 1) "FIXED_COMMISSION" else "PERCENTAGE"
+                        val radioButtonTxt = group.findViewById<RadioButton>(checkedId).text.toString().trim()
+                        val text = if (radioButtonTxt == "Percentage on Sale Value") "PERCENTAGE" else "FIXED_COMMISSION"
                         brokerComissionType = text
                         Toast.makeText(applicationContext, text, Toast.LENGTH_SHORT).show()
                     }
@@ -229,13 +247,13 @@ class GetInputs : AppCompatActivity() {
 
             val moneyFromHome = parseFloat(soldAmnt) - totToPay
 
-            val displayMsg: String = "You Bought your house for SEK $paidAmnt \n" +
+            val displaySaleReportMsg: String = "You Bought your house for SEK $paidAmnt \n" +
                     "and If you sell your house for SEK $soldAmnt with a brokerage on $brokerComissionType basis of $bPercent $brokerCommissionUnit and with the House Sale Tax of $taxPercent% on the profit SEK $profitAmount (excl. Brokerage)\n" +
                     "then, \n You need to pay SEK $brokerage as the broker commission and SEK $taxAmount to the Skatteverket \n" +
                     "with that, after deducting your Mortgage SEK ${bankMrtg} and miscellaneous expenditure (Hemnet/Advert Fee) SEK ${misc}, you will end up with SEK ${moneyFromHome} from your home \n  "
 
             val showReportIntent = Intent(this, ShowResult::class.java)
-            showReportIntent.putExtra(ShowResult.SALE_REPORT_MESSAGE, displayMsg)
+            showReportIntent.putExtra(ShowResult.SALE_REPORT_MESSAGE, displaySaleReportMsg)
             showReportIntent.putExtra(ShowResult.IS_LOAD, "false")
             showReportIntent.putExtra(ShowResult.SALE_AMOUNT, soldAmnt)
             startActivity(showReportIntent)
